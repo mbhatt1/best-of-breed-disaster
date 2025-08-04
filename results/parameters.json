@@ -1,0 +1,18 @@
+{
+  "prior": 0.02,
+  "c_skip": 0.5,
+  "c_triage": 1.0,
+  "c_auto": 5.0,
+  "c_manual": 30.0,
+  "loss_mean": 6.0,
+  "loss_std": 1.2,
+  "alpha_queue": 0.5,
+  "queue_capacity": 100,
+  "adversary_decay": 0.97,
+  "dismiss_threshold": 0.8,
+  "p_evidence_high_given_malicious": 0.8,
+  "p_evidence_high_given_benign": 0.1,
+  "gamma": 0.05,
+  "batch_size": 1000,
+  "total_incidents": 30000
+}
