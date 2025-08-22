@@ -66,7 +66,8 @@
 
 \title{Best-of-Breed, Worst-of-System: How AI Excellence Creates Security Disasters}
 
-\author{\IEEEauthorblockN{Manish Bhatt}
+\author{
+\IEEEauthorblockN{Manish Bhatt}
 \IEEEauthorblockA{\textit{AI Offensive Security Researcher} \\
 \textit{OWASP/Project Kuiper}\\
 manish.bhatt13212@gmail.com}
@@ -74,12 +75,26 @@ manish.bhatt13212@gmail.com}
 \IEEEauthorblockN{Idan Habler}
 \IEEEauthorblockA{\textit{Adversarial AI Security reSearch} \\
 \textit{Intuit}\\
-idan\_habler@intuit.com}}
+idan\_habler@intuit.com}
+\and
+\IEEEauthorblockN{Adrian Wood}
+\IEEEauthorblockA{\textit{Security Engineer} \\
+\textit{Dropbox}\\
+adrianw@dropbox.com}
+\and
+\IEEEauthorblockN{Ammar Al-Khafa}
+\IEEEauthorblockA{\textit{Security Engineer} \\
+\textit{AWS}\\
+adrianw@dropbox.com}
+}
+
+
 
 \maketitle
 
 \begin{abstract}
-Security folks increasingly rely on AI-driven agents to manage the overwhelming volume of security alerts. Industry practice favors procuring ``best-of-breed'' solutions---agents that excel at specific metrics such as speed, accuracy, or resource efficiency. Through comprehensive Monte Carlo simulation of 40,000 security incidents across 11 distinct optimization strategies, we demonstrate that this procurement approach creates catastrophic system-level failures. Our simulation incorporates adaptive adversary dynamics where poor defense strategies trigger increased attack rates, creating realistic but varying threat environments. Under these conditions, failed single-metric strategies faced up to 3,200+ attacks while the balanced approach suppressed threats to just 455 attacks. Our findings reveal that 7 out of 11 single-metric optimization strategies detect zero attacks, while a balanced multi-objective approach achieves 94.5\% detection rates. We formalize this phenomenon as the ``best-of-breed optimization paradox'' and provide empirical evidence that hyper-optimization for individual metrics creates exploitable blind spots that adversaries leverage. Our work introduces a $\gamma$-parameterized reward shaping framework that aligns agent incentives with organizational security objectives, achieving 12$\times$ improvement in utility compared to single-metric approaches. These results challenge fundamental assumptions about AI procurement in security and provide a quantitative framework for building resilient, integrated security systems.
+Security practicioners increasingly rely on AI-driven agents to manage the overwhelming volume of security alerts. Industry practice favors procuring ``best-of-breed'' solutions---agents that excel at specific metrics such as speed, accuracy, or resource efficiency. Through comprehensive Monte Carlo simulation of 40,000 security incidents across 11 distinct optimization strategies, we demonstrate that this procurement approach creates catastrophic system-level failures. Our simulation incorporates adaptive adversary dynamics where poor defense strategies trigger increased attack rates, creating realistic but varying threat environments. Under these conditions, failed single-metric strategies faced up to 3,200+ attacks while the balanced approach suppressed threats to just 455 attacks. Our findings reveal that 7 out of 11 single-metric optimization strategies detect zero attacks, while a balanced multi-objective approach achieves 94.5\% detection rates. We formalize this phenomenon as the ``best-of-breed optimization paradox'' and provide empirical evidence that hyper-optimization for individual metrics creates exploitable blind spots that adversaries leverage. Our work introduces a $\gamma$-parameterized reward shaping framework that aligns agent incentives with organizational security objectives, achieving 12$\times$ improvement in utility compared to single-metric approaches. We also create real world AI security agents for SOC and vulnerability patterns, and reproduced this paradox in them. 
+These results challenge fundamental assumptions about AI procurement in security and provide a quantitative framework for building resilient, integrated security systems. Without the degradation of communications that "best-of-breed" systems bring.
 This paper outlines a footgun, and formalizes it as a way to incorrectly make agentic systems.
 \end{abstract}
 
@@ -91,7 +106,7 @@ Security Operations, AI Agents, Optimization Paradox, Multi-objective Optimizati
 
 The modern Security Practice faces an existential challenge: processing millions of security events daily while maintaining near-perfect detection of genuine threats. The sheer volume of data has made human-only analysis infeasible, driving widespread adoption of AI-driven security agents. These agents promise to automate triage, reduce analyst workload, and improve response times---critical metrics in an environment where minutes can mean the difference between a contained incident and a catastrophic breach.
 
-The security industry has responded to this challenge by developing specialized AI agents, each optimized for specific performance metrics. Speed-optimized agents boast sub-second triage times. Accuracy-focused solutions claim 99.9\% precision rates. Resource-efficient agents minimize computational overhead. User experience champions promise frictionless security. This specialization has created a marketplace where vendors compete on narrow benchmarks, and procurement teams assemble ``best-of-breed'' stacks by selecting the top performer in each category.
+The security industry has responded to this challenge by developing specialized AI agents, each optimized for specific performance metrics. Speed-optimized agents boast sub-second triage times. Accuracy-focused solutions claim 99.9\% precision rates. Resource-efficient agents minimize computational overhead. User experience champions promise frictionless security. This specialization has created a marketplace where vendors compete on narrow benchmarks, and procurement teams assemble ``best-of-breed'' stacks by selecting the top performing model in each category.
 
 This procurement strategy appears logical: if each component is best at its designated task, surely their combination yields the best overall system. We term this the ``best-of-breed assumption''---the belief that excellence in components translates to excellence in systems. Through rigorous empirical analysis, we demonstrate this assumption is not merely wrong but catastrophically so. Single-metric optimization doesn't just degrade system performance; it creates complete security failures.
 
@@ -250,7 +265,7 @@ User Experience & Minimize disruption & Avoid business hours & N/A \\
 Cost & Minimize monetary cost & Balance time vs loss & $\theta = 0.65$ \\
 Coverage & Detect all threat types & Cast wide net & $\theta = 0.45$ \\
 Automation & Maximize automation & No human escalation & $\theta = 1.0$ \\
-\rowcolor{ieeegreen!10}
+% \rowcolor{ieeegreen!10}
 \textbf{Balanced} & \textbf{Multi-objective} & \textbf{Adaptive threshold} & $\boldsymbol{\theta = \frac{0.7}{1 + 10\gamma}}$ \\
 \bottomrule
 \end{tabular}
@@ -381,29 +396,29 @@ Our results reveal three distinct performance categories. Critically, the adapti
 \midrule
 \rowcolor{ieeelight}
 \multicolumn{8}{l}{\textit{Complete Failures -- Zero Detection Capability}} \\
-Speed & 0.0 & 0 & 3,153 & 3,153 & $-65.01$ & 0.50 & 0.0 & \cellcolor{red!20}Catastrophic \\
-Accuracy & 0.0 & 0 & 3,120 & 3,120 & $-66.08$ & 0.50 & 0.0 & \cellcolor{red!20}Catastrophic \\
-False Positive Min. & 0.0 & 0 & 3,054 & 3,054 & $-65.66$ & 0.50 & 0.0 & \cellcolor{red!20}Catastrophic \\
-Resource Efficiency & 0.0 & 0 & 3,137 & 3,137 & $-66.83$ & 0.50 & 0.0 & \cellcolor{red!20}Catastrophic \\
-Alert Volume & 0.0 & 0 & 3,242 & 3,242 & $-67.01$ & 0.50 & 0.0 & \cellcolor{red!20}Catastrophic \\
-User Experience & 0.0 & 0 & 3,112 & 3,112 & $-63.89$ & 0.50 & 0.0 & \cellcolor{red!20}Catastrophic \\
-Automation & 0.0 & 0 & 3,116 & 3,116 & $-67.50$ & 0.50 & 0.0 & \cellcolor{red!20}Catastrophic \\
+Speed & 0.0 & 0 & 3,153 & 3,153 & $-65.01$ & 0.50 & 0.0 & Catastrophic \\
+Accuracy & 0.0 & 0 & 3,120 & 3,120 & $-66.08$ & 0.50 & 0.0 & Catastrophic \\
+False Positive Min. & 0.0 & 0 & 3,054 & 3,054 & $-65.66$ & 0.50 & 0.0 & Catastrophic \\
+Resource Efficiency & 0.0 & 0 & 3,137 & 3,137 & $-66.83$ & 0.50 & 0.0 & Catastrophic \\
+Alert Volume & 0.0 & 0 & 3,242 & 3,242 & $-67.01$ & 0.50 & 0.0 & Catastrophic \\
+User Experience & 0.0 & 0 & 3,112 & 3,112 & $-63.89$ & 0.50 & 0.0 & Catastrophic \\
+Automation & 0.0 & 0 & 3,116 & 3,116 & $-67.50$ & 0.50 & 0.0 & Catastrophic \\
 \midrule
 \rowcolor{ieeelight}
 \multicolumn{9}{l}{\textit{Partial Successes -- Marginal Detection Performance}} \\
-Compliance & 45.4 & 462 & 555 & 1,017 & $-12.08$ & 1.32 & 10.6 & \cellcolor{orange!20}Poor \\
-Coverage & 44.8 & 435 & 537 & 972 & $-11.88$ & 1.35 & 10.8 & \cellcolor{orange!20}Poor \\
-Cost & 90.6 & 724 & 75 & 799 & $-5.18$ & 3.77 & 40.9 & \cellcolor{yellow!20}Acceptable \\
+Compliance & 45.4 & 462 & 555 & 1,017 & $-12.08$ & 1.32 & 10.6 & Poor \\
+Coverage & 44.8 & 435 & 537 & 972 & $-11.88$ & 1.35 & 10.8 & Poor \\
+Cost & 90.6 & 724 & 75 & 799 & $-5.18$ & 3.77 & 40.9 & Acceptable \\
 \midrule
 \rowcolor{ieeelight}
 \multicolumn{9}{l}{\textit{Multi-Objective Optimization -- Effective Security}} \\
-\textbf{Balanced} & \textbf{94.5} & \textbf{430} & \textbf{25} & \textbf{455} & \textbf{$-5.52$} & \textbf{5.26} & \textbf{59.5} & \cellcolor{green!20}\textbf{Excellent} \\
+\textbf{Balanced} & \textbf{94.5} & \textbf{430} & \textbf{25} & \textbf{455} & \textbf{$-5.52$} & \textbf{5.26} & \textbf{59.5} & \textbf{Excellent} \\
 \bottomrule
 \multicolumn{9}{l}{\scriptsize \textit{Note:} Balanced approach uses optimal $\gamma=0.06$. Total attacks vary due to adaptive adversary dynamics.}
 \end{tabular}
 \end{table*}
 
-\begin{table}[!h]
+\begin{table*}[!ht]
 \centering
 \caption{Key Performance Findings}
 \footnotesize
@@ -411,20 +426,20 @@ Cost & 90.6 & 724 & 75 & 799 & $-5.18$ & 3.77 & 40.9 & \cellcolor{yellow!20}Acce
 \toprule
 \textbf{Category} & \textbf{Strategies} & \textbf{Detection} & \textbf{Key Metric} \\
 \midrule
-\rowcolor{ieeered!10}
+
 Complete Failure & 7 strategies & 0\% & 3,000+ attacks missed \\
 & (Speed, Accuracy, etc.) & & 100\% dismiss rate \\
 \midrule
-\rowcolor{ieeeorange!10}
+
 Partial Success & 3 strategies & 45--91\% & High miss rates \\
 & (Compliance, Coverage, Cost) & & Poor utility \\
 \midrule
-\rowcolor{ieeegreen!10}
+
 Balanced Success & Multi-objective & 94.5\% & 12$\times$ utility improvement \\
 & ($\gamma=0.06$) & & Only 25 missed \\
 \bottomrule
 \end{tabular}
-\end{table}
+\end{table*}
 
 The $\gamma$-parameterized balanced approach demonstrates decisive superiority:
 
@@ -590,7 +605,6 @@ The $\gamma$-parameterized balanced approach demonstrates decisive superiority:
 \midrule
 0.00 & 0\% & $-59.96$ & Pure speed (failure) \\
 0.03 & 92.8\% & $-5.62$ & Good efficiency \\
-\rowcolor{ieeegreen!10}
 \textbf{0.06} & \textbf{94.5\%} & \textbf{$-5.52$} & \textbf{Optimal balance} \\
 0.09 & 100\% & $-8.50$ & Over-investigation \\
 \bottomrule
@@ -618,7 +632,7 @@ Balanced approach utility & $-5.52$ per incident \\
 \rowcolor{ieeegreen!10}
 Per-incident improvement & \$59.48 \\
 \rowcolor{ieeegreen!10}
-Annual savings (40K incidents/month) & \$2.38 million \\
+Annual savings (40K/month) & \$2.38 million \\
 \midrule
 \multicolumn{2}{l}{\textit{Dynamic Effects}} \\
 Adversary stealth increase & Up to 30\% \\
@@ -957,7 +971,9 @@ $\bullet$ Develop formal frameworks for adversarial component interaction\\
 & $\bullet$ Model sophisticated adaptive adversaries\\
 \bottomrule
 \end{tabular}
+    \caption{Replication Study: Evaluating Single-Agent and Multi Agent LLM architectures for the SOC}
 \end{table*}
+
 
 \section{Discussion}
 
@@ -974,6 +990,175 @@ Our results also validate Ashby's Law of Requisite Variety in the security conte
 The 12$\times$ utility improvement between failed single-metric approaches and our balanced solution translates to millions in prevented losses for large organizations. More critically, the complete detection failure of 7 out of 11 strategies suggests that many production security systems may be providing false confidence while missing most attacks.
 
 This work should prompt immediate audits of existing security stacks. Organizations using best-of-breed procurement likely have multiple optimization paradoxes creating compound vulnerabilities. The vendor community's focus on benchmark leadership may be actively harmful to customer security.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Section: Replication Study – Single‑Agent vs. Multi‑Agent LLMs for an
+% AI‑Driven Security‑Operations‑Center (SOC)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Replication Study: Evaluating Single‑Agent and Multi‑Agent
+Large‑Language‑Model Architectures for Security Operations}
+
+\subsection{Background and Motivation}
+Specialised, task‑oriented ``best‑of‑breed’’ (BoB) pipelines are frequently
+advocated in both healthcare and cybersecurity.
+Recent evidence from the clinical domain, however, suggests that optimising
+each component in isolation may degrade overall system performance
+(\textit{``the optimisation paradox''}~\cite{clinical_paradox_2025}).  
+To examine whether a similar phenomenon arises in security operations we
+conduct a direct replication—conceptually aligned with the study in
+\cite{clinical_paradox_2025}—within the context of an
+AI‑driven Security‑Operations‑Center (SOC).
+
+\subsection{Tasks and System Architectures}
+We model the SOC workflow as three sequential tasks:
+\begin{enumerate}[label=\textbf{T\arabic*}]
+  \item \emph{Information Gathering} — selecting log sources relevant to an
+        incident,
+  \item \emph{Information Interpretation} — flagging individual log entries as
+        benign or suspicious,
+  \item \emph{Differential Diagnosis} — assigning the most probable attack
+        class.
+\end{enumerate}
+
+Four system configurations are evaluated:
+\begin{itemize}
+  \item \textbf{Single‑Agent}: one LLM executes all three tasks end‑to‑end.
+  \item \textbf{Homogeneous Multi‑Agent}: three agents with an identical
+        backbone (eg, GPT‑4o) coordinated by a lightweight
+        orchestrator.
+  \item \textbf{Mixed/Heterogeneous Multi‑Agent}: two shared backbones and one
+        distinct backbone (``mixed’’) or three distinct backbones
+        (``heterogeneous’’).\footnote{The orchestrator employs simple
+        conditional routing and explicit hand‑offs; no learning occurs at the
+        orchestration layer.}
+  \item \textbf{Best‑of‑Breed (BoB)}: the single best agent for each task-selected on a development set-is
+        combined into a heterogeneous three‑agent pipeline.
+\end{itemize}
+
+\subsection{Dataset}
+Experiments use the open‑source \textsc{Mordor} Windows event‑log corpus
+(version~2024.06).  
+After deduplication and quality control we retain 29 cases, stratified 5/24
+into development and test splits, respectively.  
+Table~\ref{tab:attack_types} lists the attack classes represented.
+
+\begin{table}[ht]
+\centering
+\caption{Distribution of attack classes in the \textsc{Mordor} test set.}
+\label{tab:attack_types}
+\begin{tabular}{lrrrr}
+\toprule
+\textbf{Attack Class} & \textbf{\#Cases} &
+\textbf{Attack Class} & \textbf{\#Cases}\\
+\midrule
+Credential~Dumping (LSASS) & 2 & PsExec          & 1\\
+Mimikatz                  & 2 & Registry Tamper & 2\\
+DCSync                    & 2 & Security Audit   & 1\\
+PowerShell                & 2 & SAM Extraction   & 1\\
+Empire C2                 & 2 & Remote Logon     & 2\\
+Covenant                  & 2 & LDAP Recon       & 2\\
+Scheduled Task            & 2 & User Creation    & 2\\
+Windows Update Hijack     & 2 & ---              & ---\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Evaluation Metrics}
+Following~\cite{clinical_paradox_2025} we report:
+\begin{itemize}
+  \item \textbf{Diagnostic Accuracy}: fraction of cases for which the attack
+        class is correctly identified.
+  \item \textbf{Process Adherence}: coverage of required log sources
+        (``Coverage/Req’’) and interpretation accuracy on individual log lines
+        (``Interp Acc’’).
+  \item \textbf{Cost}: average prompt‑token cost in US\$ at 2025‑Q2 pricing.
+\end{itemize}
+
+\subsection{Results}
+Tables~\ref{tab:results_run1}–\ref{tab:results_run3} summarise three
+independent runs using different random seeds and orderings of test cases.
+
+
+\begin{table}[htbp]
+\centering
+\setlength{\tabcolsep}{3.5pt} 
+\footnotesize
+\caption{Run 1.}
+\label{tab:results_run1}
+\begin{tabularx}{\linewidth}{\raggedright\arraybackslash}
+\toprule
+\textbf{System} & \textbf{Accuracy} & \textbf{Coverage/Req} & \textbf{Interp Acc} & \textbf{Avg.\ Cost}\\
+\midrule
+Homogeneous--GPT\-4.5          & 70.83\% & 0.005 & 18.65\% & \$10.0\\
+Single\-Agent (gpt\-4o\-mini)  & 70.83\% & 0.005 & 18.06\% & \$10.0\\
+Single\-Agent (gpt\-4.1\-nano) & 70.83\% & 0.005 & 17.86\% & \$10.0\\
+Best\-of\-Breed (BoB)          & 41.67\% & 0.005 & 16.87\% & \$10.0\\
+Mixed System                   & 41.67\% & 0.005 & 17.66\% & \$10.0\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+
+\vspace{-0.6em}
+\begin{table}[htbp]
+\centering
+\setlength{\tabcolsep}{3.5pt}
+\footnotesize
+\caption{Run 2: \emph{optimisation paradox}---superior components result in inferior system performance.}
+\label{tab:results_run2}
+\begin{tabularx}{\linewidth}{\raggedright\arraybackslash}
+\toprule
+\textbf{System} & \textbf{Accuracy} & \textbf{Coverage/Req} & \textbf{Interp Acc} & \textbf{Avg.\ Cost}\\
+\midrule
+Homogeneous--GPT\-4.5          & 75.00\% & 0.004 & 14.68\% & \$10.0\\
+Single\-Agent (gpt\-4o\-mini)   & 70.83\% & 0.004 & 14.68\% & \$10.0\\
+Single\-Agent (gpt\-4.1\-nano)  & 50.00\% & 0.004 & 13.48\% & \$10.0\\
+Best\-of\-Breed (BoB)           & 50.00\% & 0.004 & 14.68\% & \$10.0\\
+Mixed System                    & 45.83\% & 0.004 & 14.68\% & \$10.0\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+
+\vspace{-0.6em}
+\begin{table}[htbp]
+\centering
+\setlength{\tabcolsep}{3.5pt}
+\footnotesize
+\caption{Run 3: second observation of the optimisation paradox.}
+\label{tab:results_run3}
+\begin{tabularx}{\linewidth}{\raggedright\arraybackslash}
+\toprule
+\textbf{System} & \textbf{Accuracy} & \textbf{Coverage/Req} & \textbf{Interp Acc} & \textbf{Avg.\ Cost}\\
+\midrule
+Homogeneous--GPT\-4.5           & 66.67\% & 0.005 & 16.27\% & \$10.0\\
+Single\-Agent (gpt\-4o\-mini)    & 54.17\% & 0.005 & 16.67\% & \$10.0\\
+Single\-Agent (gpt\-4.1\-nano)   & 47.83\% & 0.005 & 15.53\% & \$9.6\\
+Best\-of\-Breed (BoB)            & 45.83\% & 0.005 & 16.27\% & \$10.0\\
+Mixed System                     & 29.17\% & 0.004 & 16.27\% & \$10.0\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+
+\subsection{Discussion}
+Across all runs, \textbf{single‑agent} and \textbf{homogeneous} architectures
+consistently outperform BoB and mixed pipelines on diagnostic accuracy,
+despite identical or inferior component‑level metrics.  
+Qualitative inspection reveals a mismatch at task boundaries: the BoB
+information‑gathering agent generates concise summaries preferred by its own
+training objective, whereas the BoB diagnostic agent relies on rich, verbose
+context.  The resulting information loss echoes the interoperability issues
+reported in clinical multi‑agent systems~\cite{clinical_paradox_2025}.
+
+\subsection{Implications for Security Operations}
+Results caution against relying solely on benchmark scores for individual
+security modules (\eg, log parsers, threat classifiers).  
+End‑to‑end validation is required to ensure that:
+(i)~information hand‑offs preserve critical context, and
+(ii)~task‑level objectives are aligned with overall SOC outcomes such as
+time‑to‑detect or mean‑time‑to‑remediate.
+
 
 \subsection{Methodological Contributions}
 
@@ -1126,6 +1311,9 @@ N. Leveson, \textit{Engineering a Safer World: Systems Thinking Applied to Safet
 
 \bibitem{amodei2016concrete}
 D. Amodei, C. Olah, J. Steinhardt, P. Christiano, J. Schulman, and D. Mané, ``Concrete problems in AI safety,'' \textit{arXiv preprint arXiv:1606.06565}, 2016.
+
+\bibitem {clinical_paradox_2025}
+Author={Suhana Bedi \emph{et~al.}, ``The optimization paradox in clinical AI mutli-agent systems,''} Available: https://arxiv.org/abs/2506.06574
 
 \bibitem{marcus2019rebooting}
 G. Marcus and E. Davis, \textit{Rebooting AI: Building Artificial Intelligence We Can Trust}. Pantheon Books, 2019.
