@@ -6,6 +6,8 @@ A production-ready simulation for Security Operations Center (SOC) operations im
 
 This simulation demonstrates how a single reward-shaping coefficient (γ) can align AI triage agents with organizational risk, cutting expected losses four-fold while reducing missed attacks from 535 to 25 in 30,000 incidents.
 
+Full agent - https://gist.github.com/mbhatt1/e1db091efd8895115a1b0119f725053f
+
 ## Features
 
 - **Bayesian Decision Model**: Two-stage triage/investigate decision making with posterior probability calculations
